@@ -12,17 +12,16 @@ from apps.authorisatie.views import (
 )
 from apps.beheer.views import beheer
 from apps.main.views import (
+    clear_melding_token_from_cache,
     http_404,
     http_500,
     root,
     ui_settings_handler,
-    clear_melding_token_from_cache,
 )
-
 from apps.signalen.viewsets import SignaalViewSet
 from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django.views.generic import RedirectView
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -48,7 +47,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("oidc/", include("mozilla_django_oidc.urls")),
     path("health/", include("health_check.urls")),
-    
     # START beheer
     path("beheer/", beheer, name="beheer"),
     path("beheer/gebruiker/", GebruikerLijstView.as_view(), name="gebruiker_lijst"),
