@@ -1,14 +1,14 @@
 import logging
-from django.shortcuts import render
+
 from django.contrib.auth.decorators import (
     login_required,
     permission_required,
     user_passes_test,
 )
-from django.http import HttpResponse
 from django.core.cache import cache
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.shortcuts import get_object_or_404, redirect, render
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +26,7 @@ def http_500(request):
         "500.html",
     )
 
+
 @login_required
 def root(request):
     if request.user.has_perms(["authorisatie.beheer_bekijken"]):
@@ -35,6 +36,7 @@ def root(request):
         "home.html",
         {},
     )
+
 
 @login_required
 def ui_settings_handler(request):
@@ -50,6 +52,7 @@ def ui_settings_handler(request):
         "snippets/form_pageheader.html",
         {"profile": profiel},
     )
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def clear_melding_token_from_cache(request):
