@@ -61,7 +61,7 @@ class BasisService:
                     cache.set(cache_key, response, cache_timeout)
         else:
             response: Response = action(**action_params)
-
+        response.raise_for_status()
         if raw_response:
             return response
         return self.naar_json(response)
