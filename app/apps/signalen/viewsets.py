@@ -32,6 +32,13 @@ class SignaalViewSet(viewsets.ViewSet):
         if serializer.is_valid(raise_exception=True):
             signaal_data = copy.deepcopy(serializer.data)
             logger.info(f"Request splitter data: {signaal_data}")
+
+            # START remove below when admin is reachable
+            Regel.objects.get_or_create(
+                onderwerp_url="https://onderwerpen-acc.forzamor.nl/api/v1/group/41202ca5-929f-423b-9b46-b9127e0a19e0/category/ca1c979e-ab3a-4ca2-8f02-e93fda448c15/",
+            )
+            # END remove above when admin is reachable
+
             regel = Regel.objects.filter(
                 onderwerp_url__in=[
                     o.get("bron_url") for o in signaal_data.get("onderwerpen")
