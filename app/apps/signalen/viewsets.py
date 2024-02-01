@@ -30,6 +30,11 @@ class SignaalViewSet(viewsets.ViewSet):
     def create(self, request):
         serializer = SignaalSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
+            auth_header = (
+                {"Authorization": request.headers.get("Authorization")}
+                if request.headers.get("Authorization")
+                else None
+            )
             signaal_data = copy.deepcopy(serializer.data)
             logger.info(f"Request splitter data: {signaal_data}")
 
@@ -59,7 +64,7 @@ class SignaalViewSet(viewsets.ViewSet):
             if regel and regel.deduplicate and coordinates:
                 logger.info("ONTDUBBEL")
                 # check bij mor-core of er meldingen aan deze regel voldoen
-                meldingen_response = MeldingenService().meldingen(
+                meldingen_response = MeldingenService(headers=auth_header).meldingen(
                     {
                         "onderwerp_url": regel.onderwerp_url,
                         "within": f"lon:{coordinates[0]},lat:{coordinates[1]},d:{regel.distance}",
@@ -94,11 +99,6 @@ class SignaalViewSet(viewsets.ViewSet):
                 except Exception as e:
                     logger.error(f"meldingen inspect fout={e}")
 
-            auth_header = (
-                {"Authorization": request.headers.get("Authorization")}
-                if request.headers.get("Authorization")
-                else None
-            )
             logger.info(f"Signaal aanmaken data: {signaal_data}")
             response = MeldingenService(headers=auth_header).aanmaken_melding(
                 signaal_data
