@@ -16,8 +16,6 @@ class SignaalSerializer(serializers.Serializer):
     signaal_url = serializers.URLField()
     bijlagen = BijlageSerializer(many=True, required=False)
     melder = MelderSerializer(required=False)
-
-    melding = serializers.IntegerField(required=False)
     bron_id = serializers.CharField(max_length=500)
     bron_signaal_id = serializers.CharField(max_length=500)
     omschrijving_kort = serializers.CharField(max_length=500)
