@@ -80,7 +80,6 @@ class MeldingenService(BaseService):
     def __init__(self, *args, **kwargs: dict):
         self._api_base_url = settings.MELDINGEN_API_URL
         self._headers = kwargs.pop("headers", None)
-        print(self._headers)
         super().__init__(*args, **kwargs)
 
     def aanmaken_melding(self, data):
@@ -89,6 +88,13 @@ class MeldingenService(BaseService):
             method="post",
             data=data,
         )
-        logentry = f"morcore signaal_aanmaken error: status code: {response.status_code}, text: {response.text}"
-        logger.error(logentry)
+        if response.status_code != 201:
+            logentry = f"morcore signaal_aanmaken error: status code: {response.status_code}, text: {response.text}"
+            logger.error(logentry)
         return response
+
+    def meldingen(self, params={}):
+        return self._do_request(
+            "/melding/",
+            params=params,
+        )
