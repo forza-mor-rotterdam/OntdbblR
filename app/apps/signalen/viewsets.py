@@ -1,4 +1,5 @@
 import copy
+import json
 import logging
 from datetime import datetime, timedelta
 
@@ -36,13 +37,7 @@ class SignaalViewSet(viewsets.ViewSet):
                 else None
             )
             signaal_data = copy.deepcopy(serializer.data)
-            logger.info(f"Request splitter data: {signaal_data}")
-
-            # START remove below when admin is reachable
-            Regel.objects.get_or_create(
-                onderwerp_url="https://onderwerpen-acc.forzamor.nl/api/v1/group/41202ca5-929f-423b-9b46-b9127e0a19e0/category/ca1c979e-ab3a-4ca2-8f02-e93fda448c15/",
-            )
-            # END remove above when admin is reachable
+            logger.info(f"Request splitter data: {json.dumps(signaal_data, indent=4)}")
 
             regel = Regel.objects.filter(
                 onderwerp_url__in=[
@@ -59,7 +54,7 @@ class SignaalViewSet(viewsets.ViewSet):
                 signaal_data.get("origineel_aangemaakt")
             )
             logger.info(
-                f"Signaal: origineel_aangemaakt: {signaal_data.get('origineel_aangemaakt')}"
+                f"Signaal: origineel_aangemaakt={signaal_data.get('origineel_aangemaakt')}, coords={coordinates}"
             )
             if regel and regel.deduplicate and coordinates:
                 logger.info("ONTDUBBEL")
@@ -87,11 +82,15 @@ class SignaalViewSet(viewsets.ViewSet):
                 try:
                     meldingen_data = meldingen_response.json()
                     logger.info(
-                        f"Melding check voor dubbele meldingen: count={meldingen_data.get('count')}"
+                        f"Melding check voor dubbele meldingen: count={meldingen_data.get('count')}, first 5 below"
                     )
+                    for m in meldingen_data.get("results", [])[:5]:
+                        logger.info(
+                            f"M: id={m.get('id')}, origineel_aangemaakt={m.get('origineel_aangemaakt')}, coords: {m.get('locaties_voor_melding', [])[0].get('geometrie', {}).get('coordinates', []) if m.get('locaties_voor_melding') and m.get('locaties_voor_melding', [])[0].get('geometrie') else []}"
+                        )
                     if meldingen_data.get("count") > 0:
                         logger.info(
-                            f"Melding check voor dubbele meldingen: eerste melding={meldingen_data.get('results')[0]}"
+                            f"Melding check voor dubbele meldingen: eerste melding={json.dumps(meldingen_data.get('results')[0], indent=4)}"
                         )
                         signaal_data["melding"] = meldingen_data.get("results")[0].get(
                             "id"
@@ -99,7 +98,7 @@ class SignaalViewSet(viewsets.ViewSet):
                 except Exception as e:
                     logger.error(f"meldingen inspect fout={e}")
 
-            logger.info(f"Signaal aanmaken data: {signaal_data}")
+            logger.info(f"Signaal aanmaken data: {json.dumps(signaal_data, indent=4)}")
             response = MeldingenService(headers=auth_header).aanmaken_melding(
                 signaal_data
             )
