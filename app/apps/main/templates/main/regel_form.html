@@ -1,0 +1,59 @@
+{% extends "base_beheer.html" %}
+{% load rotterdam_formulier_html %}
+{% load json_encode render_onderwerp from main_tags %}
+
+{% block body %}
+<turbo-frame id="context_aanmaken">
+    <div class="page__beheer">
+        <div>
+            <a href="{% url 'regel_lijst' %}" data-turbo-action='advance' class="link--back">
+                <svg width="25" height="16" viewBox="0 0 25 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.15173 1.73256L7.73753 0.318359L1.44704 6.60885L1.4142 6.576L0 7.9902L1.4115 9.4017L1.37867 9.43453L7.67186 15.7277L9.08606 14.3135L3.7726 9.00006H24.0098V7.00006H3.88423L9.15173 1.73256Z" fill="#404B4F"/>
+                </svg>
+                Regels
+            </a>
+        </div>
+        {% if object %}
+        <h1>Regel voor onderwerp '{% render_onderwerp object.onderwerp_url %}' aanpassen</h1>
+        <p><a href="{{ object.onderwerp_url }}">{{ object.onderwerp_url }}</a></p>
+        {% else %}
+        <h1>Regel aanmaken</h1>
+        {% endif %}
+        <div class="grid-container">
+            <div class="grid-item">
+
+                <form action="{% if object %}{% url 'regel_aanpassen' object.id %}{% else %}{% url 'regel_aanmaken' %}{% endif %}" method="post" class="form--beheer">
+                    {% csrf_token %}
+                    {{form.errors}}
+                    <fieldset>
+                    {% if not object %}
+                    {{ form.onderwerp_url|render_rotterdam_formulier }}
+                    {% endif %}
+                    {{ form.distance|render_rotterdam_formulier }}
+                    {{ form.max_age|render_rotterdam_formulier }}
+                    <div class="container__checkbox--single">
+                        <h3 class="label">Is deze regel actief?</h3>
+                        {{ form.deduplicate|render_rotterdam_formulier }}
+                    </div>
+                    </fieldset>
+
+                    <div class="form-row container__button">
+                        <div class="form-row btn-row">
+                        <button
+                            type="reset"
+                            class="btn btn-tertiary"
+                            data-utils-url-param="{% url 'regel_lijst' %}"
+                        >
+                            <span>Annuleren</span>
+                        </button>
+                        <button type="submit" class="btn btn-action">
+                            <span>{% if object %}Aanpassen{% else %}Aanmaken{% endif %}</span>
+                        </button>
+                    </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</turbo-frame>
+{% endblock %}

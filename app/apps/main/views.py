@@ -1,5 +1,7 @@
 import logging
 
+from apps.main.forms import RegelChangeForm, RegelCreateForm
+from apps.main.models import Regel
 from django.contrib.auth.decorators import (
     login_required,
     permission_required,
@@ -8,7 +10,11 @@ from django.contrib.auth.decorators import (
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
 
 logger = logging.getLogger(__name__)
 
@@ -58,3 +64,51 @@ def ui_settings_handler(request):
 def clear_melding_token_from_cache(request):
     cache.delete("meldingen_token")
     return HttpResponse("melding_token removed from cache")
+
+
+class RegelView(View):
+    model = Regel
+    success_url = reverse_lazy("regel_lijst")
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("authorisatie.regel_lijst_bekijken", raise_exception=True),
+    name="dispatch",
+)
+class RegelLijstView(RegelView, ListView):
+    ...
+
+
+class RegelCreateChangeView(RegelView):
+    ...
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("authorisatie.regel_aanpassen", raise_exception=True),
+    name="dispatch",
+)
+class RegelChangeView(RegelCreateChangeView, UpdateView):
+    form_class = RegelChangeForm
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("authorisatie.regel_aanmaken", raise_exception=True),
+    name="dispatch",
+)
+class RegelCreateView(RegelCreateChangeView, CreateView):
+    form_class = RegelCreateForm
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("authorisatie.regel_verwijderen", raise_exception=True),
+    name="dispatch",
+)
+class RegelDeleteView(RegelView, DeleteView):
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        return self.form_valid(form)
