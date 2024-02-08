@@ -12,6 +12,10 @@ from apps.authorisatie.views import (
 )
 from apps.beheer.views import beheer
 from apps.main.views import (
+    RegelChangeView,
+    RegelCreateView,
+    RegelDeleteView,
+    RegelLijstView,
     clear_melding_token_from_cache,
     http_404,
     http_500,
@@ -84,6 +88,22 @@ urlpatterns = [
         "beheer/rechtengroep/<int:pk>/verwijderen/",
         RechtengroepVerwijderenView.as_view(),
         name="rechtengroep_verwijderen",
+    ),
+    path("beheer/regel/", RegelLijstView.as_view(), name="regel_lijst"),
+    path(
+        "beheer/regel/aanmaken/",
+        RegelCreateView.as_view(),
+        name="regel_aanmaken",
+    ),
+    path(
+        "beheer/regel/<int:pk>/aanpassen/",
+        RegelChangeView.as_view(),
+        name="regel_aanpassen",
+    ),
+    path(
+        "beheer/regel/<int:pk>/verwijderen/",
+        RegelDeleteView.as_view(),
+        name="regel_verwijderen",
     ),
     # END beheer
     path("api/schema/", SpectacularAPIView.as_view(api_version="v1"), name="schema"),

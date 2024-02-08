@@ -8,7 +8,7 @@ AdminSite.index_title = "OntdbblR Admin"
 
 
 class RegelAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "deduplicate", "distance", "max_age")
+    list_display = ("__str__", "deduplicate", "distance", "max_age", "onderwerp_url")
     list_editable = ("deduplicate", "distance", "max_age")
 
 

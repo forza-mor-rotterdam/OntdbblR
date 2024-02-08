@@ -36,31 +36,6 @@ class BeheerBekijkenPermissie(BasisPermissie):
     codenaam = "beheer_bekijken"
 
 
-class ContextLijstBekijkenPermissie(BasisPermissie):
-    naam = "Rol lijst bekijken"
-    codenaam = "context_lijst_bekijken"
-
-
-class ContextAanmakenPermissie(BasisPermissie):
-    naam = "Rol aanmaken"
-    codenaam = "context_aanmaken"
-
-
-class ContextBekijkenPermissie(BasisPermissie):
-    naam = "Rol bekijken"
-    codenaam = "context_bekijken"
-
-
-class ContextAanpassenPermissie(BasisPermissie):
-    naam = "Rol aanpassen"
-    codenaam = "context_aanpassen"
-
-
-class ContextVerwijderenPermissie(BasisPermissie):
-    naam = "Context verwijderen"
-    codenaam = "context_verwijderen"
-
-
 class RechtengroepLijstBekijkenPermissie(BasisPermissie):
     naam = "Rechtengroep lijst bekijken"
     codenaam = "rechtengroep_lijst_bekijken"
@@ -86,6 +61,26 @@ class RechtengroepVerwijderenPermissie(BasisPermissie):
     codenaam = "rechtengroep_verwijderen"
 
 
+class RegelLijstBekijkenPermissie(BasisPermissie):
+    naam = "Regel lijst bekijken"
+    codenaam = "regel_lijst_bekijken"
+
+
+class RegelAanmakenPermissie(BasisPermissie):
+    naam = "Regel aanmaken"
+    codenaam = "regel_aanmaken"
+
+
+class RegelAanpassenPermissie(BasisPermissie):
+    naam = "Regel aanpassen"
+    codenaam = "regel_aanpassen"
+
+
+class RegelVerwijderenPermissie(BasisPermissie):
+    naam = "Regel verwijderen"
+    codenaam = "regel_verwijderen"
+
+
 gebruikersgroep_permissies = (
     GebruikerLijstBekijkenPermissie,
     GebruikerAanmakenPermissie,
@@ -93,16 +88,15 @@ gebruikersgroep_permissies = (
     GebruikerBekijkenPermissie,
     GebruikerVerwijderenPermissie,
     BeheerBekijkenPermissie,
-    ContextLijstBekijkenPermissie,
-    ContextAanmakenPermissie,
-    ContextBekijkenPermissie,
-    ContextAanpassenPermissie,
-    ContextVerwijderenPermissie,
     RechtengroepLijstBekijkenPermissie,
     RechtengroepAanmakenPermissie,
     RechtengroepBekijkenPermissie,
     RechtengroepAanpassenPermissie,
     RechtengroepVerwijderenPermissie,
+    RegelLijstBekijkenPermissie,
+    RegelAanmakenPermissie,
+    RegelAanpassenPermissie,
+    RegelVerwijderenPermissie,
 )
 
 gebruikersgroep_permissie_opties = [
