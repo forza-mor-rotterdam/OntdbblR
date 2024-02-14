@@ -48,10 +48,6 @@ class GebruikerAanmakenAanpassenView(GebruikerView):
     def form_valid(self, form):
         if not hasattr(form.instance, "profiel"):
             form.instance.save()
-        if form.cleaned_data.get("context"):
-            form.instance.profiel.context = form.cleaned_data.get("context")
-        else:
-            form.instance.profiel.context = None
         form.instance.profiel.save()
         form.instance.groups.clear()
         if form.cleaned_data.get("group"):
@@ -72,8 +68,6 @@ class GebruikerAanpassenView(GebruikerAanmakenAanpassenView, UpdateView):
     def get_initial(self):
         initial = self.initial.copy()
         obj = self.get_object()
-        context = obj.profiel.context if hasattr(obj, "profiel") else None
-        initial["context"] = context
         initial["group"] = obj.groups.all().first()
         return initial
 

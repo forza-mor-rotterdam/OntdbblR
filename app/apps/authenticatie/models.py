@@ -22,11 +22,6 @@ class Gebruiker(AbstractUser):
             return f"{self.first_name}{' ' if self.last_name else ''}{self.last_name}"
         return self.email
 
-    def rollen_verbose(self):
-        return mark_safe(
-            f"rol: <strong>{self.profiel.context.naam if self.profiel.context else '- geen rol - '}</strong>"
-        )
-
     def rechten_verbose(self):
         return mark_safe(
             f"rechten: <strong>{self.groups.all().first().name if self.groups.all() else '- geen rechten - '}</strong>"
