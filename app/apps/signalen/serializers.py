@@ -20,7 +20,7 @@ class SignaalSerializer(serializers.Serializer):
     bron_signaal_id = serializers.CharField(max_length=500)
     omschrijving_kort = serializers.CharField(max_length=500)
     omschrijving = serializers.CharField(
-        max_length=5000, allow_blank=True, required=False
+        max_length=5000, allow_blank=True, required=False, allow_null=True
     )
     meta = serializers.JSONField(default=dict)
     meta_uitgebreid = serializers.JSONField(default=dict)
