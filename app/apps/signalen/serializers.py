@@ -5,17 +5,19 @@ from apps.locatie.serializers import (
     LichtmastSerializer,
 )
 from apps.melders.serializers import MelderSerializer
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import extend_schema_field
-from drf_writable_nested.serializers import WritableNestedModelSerializer
 from rest_framework import serializers
-from rest_framework.reverse import reverse
+
+
+class OnderwerpSerializer(serializers.Serializer):
+    bron_url = serializers.URLField()
 
 
 class SignaalSerializer(serializers.Serializer):
     signaal_url = serializers.URLField()
     bijlagen = BijlageSerializer(many=True, required=False)
     melder = MelderSerializer(required=False)
+    bron_id = serializers.CharField(max_length=500)
+    bron_signaal_id = serializers.CharField(max_length=500)
     omschrijving_kort = serializers.CharField(max_length=500)
     omschrijving = serializers.CharField(
         max_length=5000, allow_blank=True, required=False
@@ -26,8 +28,4 @@ class SignaalSerializer(serializers.Serializer):
     lichtmasten = LichtmastSerializer(many=True, required=False)
     graven = GrafSerializer(many=True, required=False)
     origineel_aangemaakt = serializers.DateTimeField()
-    onderwerpen = serializers.ListSerializer(
-        child=serializers.URLField()
-    )
-
-
+    onderwerpen = serializers.ListSerializer(child=OnderwerpSerializer())

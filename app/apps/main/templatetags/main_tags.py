@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+from apps.services.onderwerpen import render_onderwerp as render_onderwerp_service
 from django import template
 from django.conf import settings
 
@@ -56,3 +57,8 @@ def adres_order_nummer(taak, taken_sorted):
 @register.filter
 def mor_core_url(initial_url):
     return f"{settings.MOR_CORE_URL_PREFIX}{initial_url}"
+
+
+@register.simple_tag
+def render_onderwerp(onderwerp_url):
+    return render_onderwerp_service(onderwerp_url)

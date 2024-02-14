@@ -45,6 +45,8 @@ MELDINGEN_TOKEN_TIMEOUT = 60 * 60 * 24
 MELDINGEN_USERNAME = os.getenv("MELDINGEN_USERNAME")
 MELDINGEN_PASSWORD = os.getenv("MELDINGEN_PASSWORD")
 
+ONDERWERPEN_URL = os.getenv("ONDERWERPEN_URL")
+
 DEV_SOCKET_PORT = os.getenv("DEV_SOCKET_PORT", "9000")
 
 UI_SETTINGS = {"fontsizes": ["fz-medium", "fz-large", "fz-xlarge"]}

@@ -1,21 +1,12 @@
-import os
-import json
-from apps.services.main import BaseService
-from urllib.parse import urlparse
 import logging
-import re
+from urllib.parse import urlparse
+
 import requests
-from typing import Union
-from apps.services.onderwerpen import OnderwerpenService
-import copy
-from datetime import datetime, timedelta
-from urllib.parse import quote
-from collections import OrderedDict
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
+from apps.services.main import BaseService
 from django.conf import settings
 from django.core.cache import cache
-
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 logger = logging.getLogger(__name__)
 
@@ -83,13 +74,12 @@ class MeldingenService(BaseService):
     def _get_headers(self):
         if self._headers:
             return self._headers
-        headers = {"Authorization": f"Token mnvh{self.haal_token()}"}
+        headers = {"Authorization": f"Token {self.haal_token()}"}
         return headers
 
     def __init__(self, *args, **kwargs: dict):
         self._api_base_url = settings.MELDINGEN_API_URL
         self._headers = kwargs.pop("headers", None)
-        print(self._headers)
         super().__init__(*args, **kwargs)
 
     def aanmaken_melding(self, data):
@@ -98,7 +88,13 @@ class MeldingenService(BaseService):
             method="post",
             data=data,
         )
-        logentry = f"morcore signaal_aanmaken error: status code: {response.status_code}, text: {response.text}"
-        logger.error(logentry)
+        if response.status_code != 201:
+            logentry = f"morcore signaal_aanmaken error: status code: {response.status_code}, text: {response.text}"
+            logger.error(logentry)
         return response
-    
+
+    def meldingen(self, params={}):
+        return self._do_request(
+            "/melding/",
+            params=params,
+        )
