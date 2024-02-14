@@ -18,7 +18,7 @@ class Regel(BasisModel):
     )
     max_age = models.PositiveIntegerField(
         default=864000,
-        help_text="Tijd in seconden na de het begin van de melding",
+        help_text="Tijd in seconden na het begin van de melding",
     )
 
     def __str__(self):
