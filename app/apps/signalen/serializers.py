@@ -18,6 +18,7 @@ class SignaalSerializer(serializers.Serializer):
     melder = MelderSerializer(required=False)
     bron_id = serializers.CharField(max_length=500)
     bron_signaal_id = serializers.CharField(max_length=500)
+    urgentie = serializers.FloatField()
     omschrijving_kort = serializers.CharField(max_length=500)
     omschrijving = serializers.CharField(
         max_length=5000, allow_blank=True, required=False, allow_null=True
