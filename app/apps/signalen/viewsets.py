@@ -66,9 +66,15 @@ class SignaalViewSet(viewsets.ViewSet):
                         "origineel_aangemaakt_gt": (
                             origineel_aangemaakt - timedelta(seconds=regel.max_age)
                         ).isoformat(),
-                        "status": ["openstaand", "in_behandeling", "controle"],
+                        "status": [
+                            "openstaand",
+                            "in_behandeling",
+                            "controle",
+                            "wachten_melder",
+                            "pauze",
+                        ],
                         "ordering": "origineel_aangemaakt",
-                        "limit": "50",
+                        "limit": "5",
                     }
                 )
                 logger.info(
