@@ -78,7 +78,7 @@ jobs:
     name: Deploy to Test and ACC
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
-    needs: create-docker-test-image-and-test
+    needs: build-and-push-docker-image
     permissions:
       contents: read
       packages: write
