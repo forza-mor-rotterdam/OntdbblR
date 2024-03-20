@@ -1,11 +1,3 @@
-FROM node:18-bullseye AS node_step
-
-WORKDIR /srv/web/
-COPY ./frontend /srv/web/
-RUN cd /srv/web \
- && npm install \
- && npm run build
-
 FROM python:3.10.10-slim-bullseye
 
 EXPOSE 8000

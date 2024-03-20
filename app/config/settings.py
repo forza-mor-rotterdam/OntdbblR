@@ -160,14 +160,6 @@ SITE_ID = 1
 SITE_NAME = os.getenv("SITE_NAME", "OntdblR")
 SITE_DOMAIN = os.getenv("SITE_DOMAIN", "localhost")
 
-STATICFILES_DIRS = (
-    [
-        "/app/frontend/public/build/",
-    ]
-    if DEBUG
-    else []
-)
-
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), "static"))
 
