@@ -62,8 +62,6 @@ WORKDIR /app/
 
 COPY . /app/
 
-COPY --from=node_step /srv/web/public/build /static/
-
 RUN mkdir -p /media \
     && mkdir -p /static \
     && chown -R $APP_USER:$APP_USER /media \
