@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get(
 )
 
 GIT_SHA = os.getenv("GIT_SHA")
-DEPLOY_DATE = os.getenv("DEPLOY_DATE", "no time")
+DEPLOY_DATE = os.getenv("DEPLOY_DATE", "")
 ENVIRONMENT = os.getenv("ENVIRONMENT")
 DEBUG = ENVIRONMENT == "development"
 
@@ -159,6 +159,14 @@ AUTH_USER_MODEL = "authenticatie.Gebruiker"
 SITE_ID = 1
 SITE_NAME = os.getenv("SITE_NAME", "OntdblR")
 SITE_DOMAIN = os.getenv("SITE_DOMAIN", "localhost")
+
+STATICFILES_DIRS = (
+    [
+        "/app/frontend/public/build/",
+    ]
+    if DEBUG
+    else []
+)
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), "static"))

@@ -1,3 +1,11 @@
+FROM node:18-bullseye AS node_step
+
+WORKDIR /srv/web/
+COPY ./frontend /srv/web/
+RUN cd /srv/web \
+ && npm install \
+ && npm run build
+
 FROM python:3.10.10-slim-bullseye
 
 EXPOSE 8000
@@ -61,6 +69,8 @@ RUN groupadd -r $APP_USER \
 WORKDIR /app/
 
 COPY . /app/
+
+COPY --from=node_step /srv/web/public/build /static/
 
 RUN mkdir -p /media \
     && mkdir -p /static \
