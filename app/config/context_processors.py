@@ -21,7 +21,7 @@ def general_settings(context):
         deploy_date_utc = timezone.datetime.strptime(
             settings.DEPLOY_DATE, "%d-%m-%Y-%H-%M-%S"
         )
-        deploy_date_local = timezone.localtime(deploy_date_utc)
+        deploy_date_local = deploy_date_utc.astimezone(timezone.get_current_timezone())
         deploy_date_formatted = deploy_date_local.strftime("%d-%m-%Y %H:%M:%S")
 
     return {
