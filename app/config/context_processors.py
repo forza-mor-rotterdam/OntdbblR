@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.urls import reverse
+from django.utils import timezone
 from utils.diversen import absolute
 
 logger = logging.getLogger(__name__)
@@ -15,6 +16,14 @@ def general_settings(context):
     if session_expiry_timestamp:
         session_expiry_timestamp += settings.SESSION_EXPIRE_SECONDS
 
+    deploy_date_formatted = None
+    if settings.DEPLOY_DATE:
+        deploy_date_utc = timezone.datetime.strptime(
+            settings.DEPLOY_DATE, "%d-%m-%Y-%H-%M-%S"
+        )
+        deploy_date_local = deploy_date_utc.astimezone(timezone.get_current_timezone())
+        deploy_date_formatted = deploy_date_local.strftime("%d-%m-%Y %H:%M:%S")
+
     return {
         "DEBUG": settings.DEBUG,
         "DEV_SOCKET_PORT": settings.DEV_SOCKET_PORT,
@@ -25,4 +34,5 @@ def general_settings(context):
         "LOGOUT_URL": reverse("oidc_logout"),
         "LOGIN_URL": f"{reverse('oidc_authentication_init')}?next={absolute(context).get('FULL_URL')}",
         "GIT_SHA": settings.GIT_SHA,
+        "DEPLOY_DATE": deploy_date_formatted,
     }
