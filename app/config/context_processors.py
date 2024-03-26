@@ -18,11 +18,10 @@ def general_settings(context):
 
     deploy_date_formatted = None
     if settings.DEPLOY_DATE:
-        deploy_date_utc = timezone.datetime.strptime(
+        deploy_date = timezone.datetime.strptime(
             settings.DEPLOY_DATE, "%d-%m-%Y-%H-%M-%S"
         )
-        deploy_date_local = deploy_date_utc.astimezone(timezone.get_current_timezone())
-        deploy_date_formatted = deploy_date_local.strftime("%d-%m-%Y %H:%M:%S")
+        deploy_date_formatted = deploy_date.strftime("%d-%m-%Y %H:%M:%S")
 
     return {
         "DEBUG": settings.DEBUG,
