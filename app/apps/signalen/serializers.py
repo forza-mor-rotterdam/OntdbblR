@@ -19,10 +19,11 @@ class SignaalSerializer(serializers.Serializer):
     bron_id = serializers.CharField(max_length=500)
     bron_signaal_id = serializers.CharField(max_length=500)
     urgentie = serializers.FloatField()
-    omschrijving_kort = serializers.CharField(max_length=500)
-    omschrijving = serializers.CharField(
+    omschrijving_melder = serializers.CharField(max_length=500)
+    aanvullende_informatie = serializers.CharField(
         max_length=5000, allow_blank=True, required=False, allow_null=True
     )
+    aanvullende_vragen = serializers.JSONField(default=list)
     meta = serializers.JSONField(default=dict)
     meta_uitgebreid = serializers.JSONField(default=dict)
     adressen = AdresSerializer(many=True, required=False)

@@ -43,7 +43,7 @@
         }
         margin: 32px 0;
 
-        >* {
+        > * {
             flex: 1;
         }
 
@@ -65,12 +65,13 @@
     }
 
     ul.list--images li img {
-        max-width: map-get($container-max-widths , lg );
+        max-width: map-get($container-max-widths, lg);
         width: 100%;
     }
 
     table tbody {
-        th, td {
+        th,
+        td {
             text-align: left;
             padding-left: 0.5rem;
             padding-right: 0.5rem;
@@ -91,7 +92,7 @@
     }
 
     form {
-        max-width: map-get($container-max-widths , md );
+        max-width: map-get($container-max-widths, md);
         margin: 0 auto;
     }
     .btn-row {
@@ -114,7 +115,6 @@
     }
 
     .form-row {
-
         input + p,
         select + p,
         .list--form-check-input + p {
