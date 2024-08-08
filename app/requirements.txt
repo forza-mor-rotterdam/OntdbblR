@@ -1,4 +1,4 @@
-Django==5.0.1
+Django==5.1
 django-filter==22.1
 django-health-check
 django_redis
