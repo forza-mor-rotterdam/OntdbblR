@@ -2,6 +2,7 @@ import logging
 from urllib.parse import urlparse
 
 import requests
+import urllib3
 from requests import Request, Response
 
 logger = logging.getLogger(__name__)
@@ -22,7 +23,9 @@ class BaseService:
         ...
 
     def _get_headers(self):
-        headers = {}
+        headers = {
+            "user-agent": urllib3.util.SKIP_HEADER,
+        }
         return headers
 
     def _relatieve_url(self, url: str):

@@ -2,6 +2,7 @@ import logging
 from urllib.parse import urlparse
 
 import requests
+import urllib3
 from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
@@ -54,6 +55,9 @@ class MeldingenService:
                     "username": email,
                     "password": settings.MELDINGEN_PASSWORD,
                 },
+                headers={
+                    "user-agent": urllib3.util.SKIP_HEADER,
+                },
             )
             logger.info(settings.MELDINGEN_TOKEN_API)
             logger.info(settings.MELDINGEN_USERNAME)
@@ -70,7 +74,10 @@ class MeldingenService:
         return meldingen_token
 
     def get_headers(self):
-        headers = {"Authorization": f"Token {self.haal_token()}"}
+        headers = {
+            "Authorization": f"Token {self.haal_token()}",
+            "user-agent": urllib3.util.SKIP_HEADER,
+        }
         return headers
 
     def do_request(self, url, method="get", data={}, raw_response=True):
