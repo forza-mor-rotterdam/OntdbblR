@@ -5,6 +5,7 @@ import sys
 from os.path import join
 
 import requests
+import urllib3
 
 locale.setlocale(locale.LC_ALL, "nl_NL.UTF-8")
 logger = logging.getLogger(__name__)
@@ -15,6 +16,13 @@ TRUE_VALUES = [True, "True", "true", "1"]
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY", os.environ.get("SECRET_KEY", os.environ.get("APP_SECRET"))
 )
+
+# APP_ENV's
+PRODUCTIE = "productie"
+ACCEPTATIE = "acceptatie"
+TEST = "test"
+
+APP_ENV = os.getenv("APP_ENV", PRODUCTIE)  # acceptatie/test/productie
 
 GIT_SHA = os.getenv("GIT_SHA")
 DEPLOY_DATE = os.getenv("DEPLOY_DATE", "")
@@ -386,7 +394,12 @@ OPENID_CONFIG_URI = os.getenv(
 )
 OPENID_CONFIG = {}
 try:
-    OPENID_CONFIG = requests.get(OPENID_CONFIG_URI).json()
+    OPENID_CONFIG = requests.get(
+        OPENID_CONFIG_URI,
+        headers={
+            "user-agent": urllib3.util.SKIP_HEADER,
+        },
+    ).json()
 except Exception as e:
     logger.error(f"OPENID_CONFIG FOUT, url: {OPENID_CONFIG_URI}, error: {e}")
 OIDC_ENABLED = False
