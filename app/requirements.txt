@@ -8,7 +8,7 @@ django-csp==3.6
 django-db-schema-renderer==0.1.2
 django-ckeditor
 django-session-timeout-joinup==1.0.0
-djangorestframework==3.14.0
+djangorestframework==3.15.1
 djangorestframework-csv==2.1.1
 djangorestframework-gis==1.0
 djangorestframework-xml==2.0.0
@@ -16,7 +16,7 @@ drf-extensions==0.7.1
 drf-writable-nested==0.7.0
 drf-spectacular==0.26.0
 drf_extra_fields==3.4.1
-uWSGI==2.0.22
+uWSGI==2.0.25.1
 # psycopg2-binary==2.9.5
 psycopg
 django-webpack-loader==1.7.0

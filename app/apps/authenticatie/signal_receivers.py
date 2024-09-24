@@ -8,5 +8,7 @@ User = get_user_model()
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
+    if kwargs.get("raw"):
+        return
     if not hasattr(instance, "profiel"):
         Profiel.objects.create(gebruiker=instance)
