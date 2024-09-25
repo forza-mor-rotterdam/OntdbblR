@@ -165,7 +165,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 AUTH_USER_MODEL = "authenticatie.Gebruiker"
 
 SITE_ID = 1
-SITE_NAME = os.getenv("SITE_NAME", "OntdblR")
+SITE_NAME = os.getenv("SITE_NAME", "OntdbblR")
 SITE_DOMAIN = os.getenv("SITE_DOMAIN", "localhost")
 
 STATICFILES_DIRS = (
@@ -224,7 +224,7 @@ REST_FRAMEWORK = dict(
 
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "OntdblR",
+    "TITLE": "OntdbblR",
     "DESCRIPTION": "Voor het ontdubbelen van Meldingen Openbare Ruimte",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,

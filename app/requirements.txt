@@ -17,8 +17,7 @@ drf-writable-nested==0.7.0
 drf-spectacular==0.26.0
 drf_extra_fields==3.4.1
 uWSGI==2.0.25.1
-# psycopg2-binary==2.9.5
-psycopg
+psycopg2>=2.9.5
 django-webpack-loader==1.7.0
 requests==2.29.0
 debugpy
