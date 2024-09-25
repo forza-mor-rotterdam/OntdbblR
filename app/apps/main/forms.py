@@ -4,7 +4,6 @@ from django import forms
 
 
 class RegelChangeForm(forms.ModelForm):
-
     deduplicate = forms.BooleanField(
         widget=forms.CheckboxInput(
             attrs={
@@ -14,7 +13,7 @@ class RegelChangeForm(forms.ModelForm):
         label="Deduplicate",
         required=False,
     )
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -28,7 +27,6 @@ class RegelChangeForm(forms.ModelForm):
 
 
 class RegelCreateForm(forms.ModelForm):
-
     deduplicate = forms.BooleanField(
         widget=forms.CheckboxInput(
             attrs={

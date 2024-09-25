@@ -403,10 +403,9 @@ ul.list--form-radio-input {
     input {
         @include form-check-input();
         position: absolute;
-        top:  -2px;
+        top: -2px;
         left: 0;
     }
-
 
     .form--beheer & {
         display: block;
