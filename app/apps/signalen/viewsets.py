@@ -3,6 +3,7 @@ import json
 import logging
 from datetime import datetime, timedelta
 
+import urllib3
 from apps.main.models import Regel
 from apps.services.mor_core import MeldingenService
 from apps.signalen.serializers import SignaalSerializer
@@ -31,11 +32,15 @@ class SignaalViewSet(viewsets.ViewSet):
     def create(self, request):
         serializer = SignaalSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            auth_header = (
-                {"Authorization": request.headers.get("Authorization")}
-                if request.headers.get("Authorization")
-                else None
-            )
+            default_headers = {
+                "user-agent": urllib3.util.SKIP_HEADER,
+            }
+            if request.headers.get("Authorization"):
+                default_headers.update(
+                    {
+                        "Authorization": request.headers.get("Authorization"),
+                    }
+                )
             signaal_data = copy.deepcopy(serializer.data)
             logger.info(f"Request splitter data: {json.dumps(signaal_data, indent=4)}")
 
@@ -59,7 +64,9 @@ class SignaalViewSet(viewsets.ViewSet):
             if regel and regel.deduplicate and coordinates:
                 logger.info("ONTDUBBEL")
                 # check bij mor-core of er meldingen aan deze regel voldoen
-                meldingen_response = MeldingenService(headers=auth_header).meldingen(
+                meldingen_response = MeldingenService(
+                    headers=default_headers
+                ).meldingen(
                     {
                         "onderwerp_url": regel.onderwerp_url,
                         "within": f"lon:{coordinates[0]},lat:{coordinates[1]},d:{regel.distance}",
@@ -105,7 +112,7 @@ class SignaalViewSet(viewsets.ViewSet):
                     logger.error(f"meldingen inspect fout={e}")
 
             logger.info(f"Signaal aanmaken data: {json.dumps(signaal_data, indent=4)}")
-            response = MeldingenService(headers=auth_header).aanmaken_melding(
+            response = MeldingenService(headers=default_headers).aanmaken_melding(
                 signaal_data
             )
             logger.info(

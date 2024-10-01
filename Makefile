@@ -51,7 +51,7 @@ format: ## Use pre-commit config to format files
 	pre-commit run --all-files
 
 create_docker_networks:
-	docker network create ontdblr_network && \
+	docker network create ontdbblr_network && \
     docker network create mor_bridge_network
 
 # Static files
