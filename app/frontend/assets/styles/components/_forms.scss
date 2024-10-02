@@ -129,6 +129,7 @@ $form-search-indicator-position: left 10px center !default;
     margin: 0.25rem 0;
     display: block;
     color: $gray-tint09;
+    font-size: 0.75em;
 }
 
 .form-control__with-helptext {
@@ -392,17 +393,18 @@ ul.list--form-radio-input {
         margin: 0 0 $input-padding-y;
         position: relative;
     }
+    label {
+        width: 100%;
+        padding-left: 30px;
+        box-sizing: border-box;
+        display: block;
+        font-weight: 400;
+    }
     input {
         @include form-check-input();
         position: absolute;
-        top: 25%;
-        left: 10px;
-
-        ~ .form-check-label {
-            width: 100%;
-            padding-left: 45px;
-            box-sizing: border-box;
-        }
+        top: -2px;
+        left: 0;
     }
 
     .form--beheer & {
@@ -443,12 +445,6 @@ ul.list--form-radio-input {
 ul.list--form-check-input {
     .form-check {
         margin-left: 0;
-
-        input {
-            margin-right: 0;
-            top: 0;
-            left: $input-padding-y;
-        }
     }
 }
 

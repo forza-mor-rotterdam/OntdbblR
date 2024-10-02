@@ -4,6 +4,16 @@ from django import forms
 
 
 class RegelChangeForm(forms.ModelForm):
+    deduplicate = forms.BooleanField(
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+            }
+        ),
+        label="Deduplicate",
+        required=False,
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -17,8 +27,22 @@ class RegelChangeForm(forms.ModelForm):
 
 
 class RegelCreateForm(forms.ModelForm):
+    deduplicate = forms.BooleanField(
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+            }
+        ),
+        label="Deduplicate",
+        required=False,
+    )
+
     onderwerp_url = forms.ChoiceField(
-        widget=forms.RadioSelect(),
+        widget=forms.RadioSelect(
+            attrs={
+                "class": "list--form-radio-input",
+            }
+        ),
         choices=(),
         label="Onderwerp",
         required=True,

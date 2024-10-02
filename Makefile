@@ -1,8 +1,8 @@
 # Build scripts to run commands within the Docker container or create local environments
 
 # Docker variables
-RUN_IN_NEW_WEBCONTEXT = docker compose run -it ontdblr_app
-EXEC_IN_WEB = docker compose run ontdblr_app
+RUN_IN_NEW_WEBCONTEXT = docker compose run -it ontdbblr_app
+EXEC_IN_WEB = docker compose run ontdbblr_app
 EXEC_IN_WEB_CMD = $(EXEC_IN_WEB) python manage.py
 
 #  General

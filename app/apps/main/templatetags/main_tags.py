@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 
 from apps.services.onderwerpen import render_onderwerp as render_onderwerp_service
@@ -62,3 +63,10 @@ def mor_core_url(initial_url):
 @register.simple_tag
 def render_onderwerp(onderwerp_url):
     return render_onderwerp_service(onderwerp_url)
+
+
+@register.filter
+def file_exists(file_path):
+    return os.path.isfile(
+        os.path.join(settings.BASE_DIR, "apps/main/templates/", file_path)
+    )
