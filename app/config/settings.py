@@ -62,6 +62,7 @@ UI_SETTINGS = {"fontsizes": ["fz-medium", "fz-large", "fz-xlarge"]}
 
 INSTALLED_APPS = (
     # templates override
+    "apps.main",
     "apps.health",
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
@@ -72,6 +73,7 @@ INSTALLED_APPS = (
     "django.contrib.admin",
     "django.contrib.gis",
     "django.contrib.postgres",
+    "django.forms",
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
@@ -86,7 +88,6 @@ INSTALLED_APPS = (
     "health_check.db",
     "health_check.contrib.migrations",
     # Apps
-    "apps.main",
     "apps.authorisatie",
     "apps.authenticatie",
     "apps.rotterdam_formulier_html",
@@ -164,7 +165,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 AUTH_USER_MODEL = "authenticatie.Gebruiker"
 
 SITE_ID = 1
-SITE_NAME = os.getenv("SITE_NAME", "OntdblR")
+SITE_NAME = os.getenv("SITE_NAME", "OntdbblR")
 SITE_DOMAIN = os.getenv("SITE_DOMAIN", "localhost")
 
 STATICFILES_DIRS = (
@@ -223,7 +224,7 @@ REST_FRAMEWORK = dict(
 
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "OntdblR",
+    "TITLE": "OntdbblR",
     "DESCRIPTION": "Voor het ontdubbelen van Meldingen Openbare Ruimte",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
@@ -294,6 +295,7 @@ CSP_CONNECT_SRC = (
 )
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
 
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

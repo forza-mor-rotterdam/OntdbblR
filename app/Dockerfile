@@ -10,6 +10,9 @@ FROM python:3.10.10-slim-bullseye
 
 EXPOSE 8000
 
+# Expose uwsgi stats interface
+EXPOSE 9191
+
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=off \
     REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
@@ -55,6 +58,7 @@ RUN groupadd -r $APP_USER \
     libmagic1 \
     libcairo2 \
     libpango1.0-0 \
+    libpq-dev \
     gcc \
     graphviz \
     graphviz-dev \
