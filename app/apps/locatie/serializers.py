@@ -9,7 +9,7 @@ class AdresSerializer(serializers.Serializer):
     straatnaam = serializers.CharField(
         max_length=255, required=False, allow_blank=True, allow_null=True
     )
-    huisnummer = serializers.IntegerField(required=False)
+    huisnummer = serializers.IntegerField(required=False, allow_null=True)
     huisletter = serializers.CharField(
         max_length=1, required=False, allow_blank=True, allow_null=True
     )
