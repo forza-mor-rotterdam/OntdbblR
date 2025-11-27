@@ -1,31 +1,65 @@
 {% extends "base.html" %}
+{% load webpack_static from webpack_loader %}
+{% block title %}
+    Home | OntdbblR
+{% endblock title %}
+{% block body_class %}
+    page__unauthorized
+{% endblock body_class %}
 {% block body %}
     <turbo-frame id="overview">
     <div class="border-green print-only"></div>
-    <div class="page__detail">
-        <div data-controller="detail">
-            <div class="grid-container">
-                <div class="grid-item">
-                    <div>
-                        <h1>Home</h1>
+    <div class="container__unauthorized">
+        <div class="container__hero">
+            <div class="hero"
+                 data-controller="hero-image"
+                 data-hero-image-paths='[ "{% webpack_static "images/login_1.jpg" %}", "{% webpack_static "images/login_2.jpg" %}", "{% webpack_static "images/login_3.jpg" %}" ]'>
+                <img data-hero-image-target="img"
+                     class="hero-image hide"
+                     alt="Hero afbeelding">
+                <img class="logo-organisatie"
+                     alt="Logo Rotterdam"
+                     src="{% webpack_static 'images/logo-organisatie_wit.svg' %}">
+            </div>
+        </div>
+        <div class="container__content">
+            <img class="logo-organisatie"
+                 alt="Logo Rotterdam"
+                 src="{% webpack_static 'images/logo-organisatie.svg' %}">
+            <h1>
+                <span class="color--primary">Ontdbbl</span>R
+            </h1>
+            {% if not request.user.is_authenticated %}
+                <p>OntdbblR is de app voor het ontdubbelen van meldingen</p>
+                <a href="{% url 'login' %}"
+                   class="btn btn-action btn-action--primary"
+                   target="_top"
+                   data-turbo="false">Inloggen</a>
+            {% else %}
+                <h2>
+                    Helaas, je hebt niet de juiste rechten
+                    <br>
+                    om OntdbblR te kunnen gebruiken.
+                </h2>
+                {% if perms.authorisatie.beheer_bekijken %}
+                    <p>Je hebt wel beheerrechten.</p>
+                    <a href="{% url 'beheer' %}"
+                       class="btn btn-action btn-action--primary"
+                       target="_top"
+                       data-turbo="false">Ga naar de beheeromgeving</a>
+                {% else %}
+                    <div class="container__details">
+                        <p>
+                            Je account heeft nog wat aandacht nodig om gebruik te kunnen maken van OntdbblR. Hieronder vind je de instellingen die nu bij ons bekend zijn:
+                        </p>
+                        {% include "auth/rollen_rechten.html" %}
+                        <a href="https://rotterdam.topdesk.net/tas/public/ssp/content/serviceflow?unid=d1dbff359d2e4655b3edea6ca1806c4e&openedFromService=true"
+                           class="btn btn-action btn-action--primary"
+                           target="_top"
+                           data-turbo="false">Vraag rechten aan</a>
                     </div>
-                </div>
-            </div>
-            <div class="grid-container">
-                <div class="grid-item">
-                    <section class="section--seperated">
-                        <div class="container__details">
-                            <h2>Om te beginnen</h2>
-                            <p>
-                                Je bent wel ingelogt, maar je account heeft nog wat aandacht nodig om gebruik te maken van OntdbblR.
-                                <br>
-                                Hieronder vindt je de instellingen zoals je nu bij ons bekent bent.
-                            </p>
-                            {% include "auth/rollen_rechten.html" %}
-                        </div>
-                    </section>
-                </div>
-            </div>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
     </turbo-frame>

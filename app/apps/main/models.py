@@ -1,4 +1,4 @@
-from apps.services.onderwerpen import OnderwerpenService
+from apps.main.services import OnderwerpenService
 from django.contrib.gis.db import models
 from utils.models import BasisModel
 
@@ -22,7 +22,8 @@ class Regel(BasisModel):
     )
 
     def __str__(self):
-        onderwerp = OnderwerpenService().get_onderwerp(self.onderwerp_url)
-        if onderwerp:
+        try:
+            onderwerp = OnderwerpenService().get_onderwerp(self.onderwerp_url)
             return onderwerp.get("name")
-        return self.onderwerp_url
+        except Exception:
+            return self.onderwerp_url

@@ -69,11 +69,13 @@
         <script src="//unpkg.com/leaflet-gesture-handling"></script>
     </head>
     <body class="{% block body_class %}app {% endblock body_class %} {% if user.profiel.ui_instellingen.fontsize %}{{ user.profiel.ui_instellingen.fontsize }}{% endif %}">
-        {% block pageheader %}
-            {% with page_title="OntdbblR" %}
-                {% include "snippets/pageheader.html" %}
-            {% endwith %}
-        {% endblock pageheader %}
+        {% if request.user.is_authenticated %}
+            {% block pageheader %}
+                {% with page_title="OntdbblR" %}
+                    {% include "snippets/pageheader.html" %}
+                {% endwith %}
+            {% endblock pageheader %}
+        {% endif %}
         <main data-controller="main" data-main-taken-outlet="#taken">
             <div class="{% block container_class %}container container--unlimited{% endblock container_class %}">
                 {% block body %}

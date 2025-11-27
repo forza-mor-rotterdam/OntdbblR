@@ -42,6 +42,11 @@ LANGUAGES = [("nl", "Dutch")]
 DEFAULT_ALLOWED_HOSTS = ".forzamor.nl,localhost,127.0.0.1,.mor.local"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", DEFAULT_ALLOWED_HOSTS).split(",")
 
+ENABLE_DJANGO_ADMIN_LOGIN = os.getenv("ENABLE_DJANGO_ADMIN_LOGIN", False) in TRUE_VALUES
+
+LOGIN_URL = "login"
+LOGOUT_URL = "logout"
+
 MELDINGEN_URL = os.getenv("MELDINGEN_URL", "https://mor-core-acc.forzamor.nl")
 MELDINGEN_API_URL = os.getenv("MELDINGEN_API_URL", f"{MELDINGEN_URL}/api/v1")
 MELDINGEN_API_HEALTH_CHECK_URL = os.getenv(
@@ -92,6 +97,7 @@ INSTALLED_APPS = (
     "apps.authenticatie",
     "apps.rotterdam_formulier_html",
     "apps.beheer",
+    "apps.instellingen",
     "apps.signalen",
     "apps.locatie",
     "apps.bijlagen",
@@ -390,23 +396,29 @@ OIDC_RP_CLIENT_SECRET = os.getenv("OIDC_RP_CLIENT_SECRET")
 
 OIDC_REALM = os.getenv("OIDC_REALM")
 AUTH_BASE_URL = os.getenv("AUTH_BASE_URL")
+OPENID_CONFIG = {}
+OPENID_CONFIG_URI_DEFAULT = (
+    f"{AUTH_BASE_URL}/realms/{OIDC_REALM}/.well-known/openid-configuration"
+    if AUTH_BASE_URL and OIDC_REALM
+    else None
+)
 OPENID_CONFIG_URI = os.getenv(
     "OPENID_CONFIG_URI",
-    f"{AUTH_BASE_URL}/realms/{OIDC_REALM}/.well-known/openid-configuration",
+    OPENID_CONFIG_URI_DEFAULT,
 )
-OPENID_CONFIG = {}
-try:
-    OPENID_CONFIG = requests.get(
-        OPENID_CONFIG_URI,
-        headers={
-            "user-agent": urllib3.util.SKIP_HEADER,
-        },
-    ).json()
-except Exception as e:
-    logger.error(f"OPENID_CONFIG FOUT, url: {OPENID_CONFIG_URI}, error: {e}")
-OIDC_ENABLED = False
-if OPENID_CONFIG and OIDC_RP_CLIENT_ID:
-    OIDC_ENABLED = True
+if OPENID_CONFIG_URI:
+    try:
+        OPENID_CONFIG = requests.get(
+            OPENID_CONFIG_URI,
+            headers={
+                "user-agent": urllib3.util.SKIP_HEADER,
+            },
+        ).json()
+    except Exception as e:
+        raise Exception(f"OPENID_CONFIG FOUT, url: {OPENID_CONFIG_URI}, error: {e}")
+
+OIDC_ENABLED = OPENID_CONFIG and OIDC_RP_CLIENT_ID
+if OIDC_ENABLED:
     OIDC_VERIFY_SSL = os.getenv("OIDC_VERIFY_SSL", True) in TRUE_VALUES
     OIDC_USE_NONCE = os.getenv("OIDC_USE_NONCE", True) in TRUE_VALUES
 
@@ -448,7 +460,6 @@ if OPENID_CONFIG and OIDC_RP_CLIENT_ID:
     LOGIN_REDIRECT_URL = "/"
     LOGIN_REDIRECT_URL_FAILURE = "/"
     LOGOUT_REDIRECT_URL = OIDC_OP_LOGOUT_ENDPOINT
-    LOGIN_URL = "/oidc/authenticate/"
 
 
 APP_MERCURE_PUBLIC_URL = os.getenv("APP_MERCURE_PUBLIC_URL")

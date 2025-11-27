@@ -1,5 +1,5 @@
 from apps.main.models import Regel
-from apps.services.onderwerpen import OnderwerpenService
+from apps.main.services import OnderwerpenService
 from django import forms
 
 
@@ -60,12 +60,14 @@ class RegelCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        onderwerpen_service = OnderwerpenService()
+
         bestaande_onderwerp_urls = list(
             Regel.objects.values_list("onderwerp_url", flat=True)
         )
-        groepen = OnderwerpenService().get_groepen_lijst().get("results", [])
+        groepen = onderwerpen_service.get_groepen(force_cache=True)
         groepnaam_door_uuid = {g.get("uuid"): g.get("name") for g in groepen}
-        onderwerpen = OnderwerpenService().get_onderwerpen_lijst().get("results", [])
+        onderwerpen = onderwerpen_service.get_onderwerpen(force_cache=True)
         self.fields["onderwerp_url"].choices = [
             (
                 o.get("_links", {}).get("self"),
