@@ -51,11 +51,6 @@
                                 data-action="modal#closeModal"></button>
                     </div>
                     <div class="modal-body">
-                        <ul class="list-clean list-nav--tertiary">
-                            <li class="wrapper-horizontal">
-                                <a href="{% url 'root' %}">Homepagina</a>
-                            </li>
-                        </ul>
                         {% if request.user.is_authenticated %}
                             {% include "snippets/form_pageheader.html" %}
                         {% endif %}

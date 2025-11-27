@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 import urllib3
 from apps.main.models import Regel
-from apps.services.mor_core import MeldingenService
+from apps.main.services import MORCoreService
 from apps.signalen.serializers import SignaalSerializer
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -64,36 +64,35 @@ class SignaalViewSet(viewsets.ViewSet):
             if regel and regel.deduplicate and coordinates:
                 logger.info("ONTDUBBEL")
                 # check bij mor-core of er meldingen aan deze regel voldoen
-                meldingen_response = MeldingenService(
-                    headers=default_headers
-                ).meldingen(
-                    {
-                        "onderwerp_url": regel.onderwerp_url,
-                        "within": f"lon:{coordinates[0]},lat:{coordinates[1]},d:{regel.distance}",
-                        "origineel_aangemaakt_gt": (
-                            origineel_aangemaakt - timedelta(seconds=regel.max_age)
-                        ).isoformat(),
-                        "status": [
-                            "openstaand",
-                            "in_behandeling",
-                            "controle",
-                            "wachten_melder",
-                            "pauze",
-                        ],
-                        "ordering": "origineel_aangemaakt",
-                        "limit": "5",
-                    }
-                )
-                logger.info(
-                    f"Melding check voor dubbele meldingen: status code={meldingen_response.status_code}"
-                )
+                token = [
+                    auth_part.strip()
+                    for auth_part in request.headers.get("Authorization", "").split(" ")
+                ][-1]
+                mor_core_service = MORCoreService(token=token)
+                params = {
+                    "onderwerp_url": regel.onderwerp_url,
+                    "within": f"lon:{coordinates[0]},lat:{coordinates[1]},d:{regel.distance}",
+                    "origineel_aangemaakt_gt": (
+                        origineel_aangemaakt - timedelta(seconds=regel.max_age)
+                    ).isoformat(),
+                    "status": [
+                        "openstaand",
+                        "in_behandeling",
+                        "controle",
+                        "wachten_melder",
+                        "pauze",
+                    ],
+                    "ordering": "origineel_aangemaakt",
+                    "limit": "5",
+                }
+                meldingen_data = mor_core_service.get_meldingen(params)
+                logger.info("Melding check voor dubbele meldingen")
 
-                if int(meldingen_response.status_code) != 200:
+                if meldingen_data.get("errors"):
                     logger.error(
-                        f"meldingen response: text={meldingen_response.text}, status_code={meldingen_response.status_code}"
+                        f'Meldingen response: error={meldingen_data.get("errors")}'
                     )
                 try:
-                    meldingen_data = meldingen_response.json()
                     logger.info(
                         f"Melding check voor dubbele meldingen: count={meldingen_data.get('count')}, first 5 below"
                     )
@@ -112,11 +111,13 @@ class SignaalViewSet(viewsets.ViewSet):
                     logger.error(f"meldingen inspect fout={e}")
 
             logger.info(f"Signaal aanmaken data: {json.dumps(signaal_data, indent=4)}")
-            response = MeldingenService(headers=default_headers).aanmaken_melding(
-                signaal_data
+
+            response = mor_core_service.signaal_aanmaken(data=signaal_data)
+            status_code = (
+                response.get("errors", {}).get("status_code")
+                if response.get("errors", {})
+                else 201
             )
-            logger.info(
-                f"Response van mor-core: text={response.text}, status={response.status_code}"
-            )
-            return Response(response.json(), status=response.status_code)
+            logger.info(f"Response van mor-core: text={response}, status={status_code}")
+            return Response(response, status=status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

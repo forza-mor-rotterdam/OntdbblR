@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 
-from apps.services.onderwerpen import render_onderwerp as render_onderwerp_service
+from apps.main.services import render_onderwerp as render_onderwerp_service
 from django import template
 from django.conf import settings
 
