@@ -3,7 +3,6 @@ import json
 import logging
 from datetime import datetime, timedelta
 
-import urllib3
 from apps.main.models import Regel
 from apps.main.services import MORCoreService
 from apps.signalen.serializers import SignaalSerializer
@@ -31,16 +30,13 @@ class SignaalViewSet(viewsets.ViewSet):
 
     def create(self, request):
         serializer = SignaalSerializer(data=request.data)
+        token = [
+            auth_part.strip()
+            for auth_part in request.headers.get("Authorization", "").split(" ")
+        ][-1]
+        mor_core_service = MORCoreService(token=token)
+
         if serializer.is_valid(raise_exception=True):
-            default_headers = {
-                "user-agent": urllib3.util.SKIP_HEADER,
-            }
-            if request.headers.get("Authorization"):
-                default_headers.update(
-                    {
-                        "Authorization": request.headers.get("Authorization"),
-                    }
-                )
             signaal_data = copy.deepcopy(serializer.data)
             logger.info(f"Request splitter data: {json.dumps(signaal_data, indent=4)}")
 
@@ -64,11 +60,6 @@ class SignaalViewSet(viewsets.ViewSet):
             if regel and regel.deduplicate and coordinates:
                 logger.info("ONTDUBBEL")
                 # check bij mor-core of er meldingen aan deze regel voldoen
-                token = [
-                    auth_part.strip()
-                    for auth_part in request.headers.get("Authorization", "").split(" ")
-                ][-1]
-                mor_core_service = MORCoreService(token=token)
                 params = {
                     "onderwerp_url": regel.onderwerp_url,
                     "within": f"lon:{coordinates[0]},lat:{coordinates[1]},d:{regel.distance}",
