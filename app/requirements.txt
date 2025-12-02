@@ -25,7 +25,7 @@ debugpy
 Pillow==9.4.0
 pillow-heif==0.13.0
 sorl-thumbnail==12.8.0
-git+https://github.com/forza-mor-rotterdam/mor-api-services.git@a0a333289fe9c4ad286289d32103a1ee8deea67e
+git+https://github.com/forza-mor-rotterdam/mor-api-services.git@37206ea455c6b512d94b271ab2f767d8cb5689b1
 
 
 redis==4.5.5
