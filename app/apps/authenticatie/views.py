@@ -43,7 +43,7 @@ class LogoutView(View):
         if settings.OIDC_ENABLED:
             return redirect("/oidc/logout/")
         if settings.ENABLE_DJANGO_ADMIN_LOGIN:
-            return redirect(f"/admin/logout/?next={request.GET.get('next', '/')}")
+            return redirect(f"/admin/?next={request.GET.get('next', '/')}")
 
         return HttpResponse("Er is geen logout ingesteld")
 
