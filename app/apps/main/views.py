@@ -33,10 +33,9 @@ def http_500(request):
     )
 
 
-@login_required
 def root(request):
     if request.user.has_perms(["authorisatie.beheer_bekijken"]):
-        return redirect(reverse("beheer"), False)
+        return redirect(reverse("beheer"))
     return render(
         request,
         "home.html",

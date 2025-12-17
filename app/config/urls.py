@@ -2,6 +2,8 @@ from apps.authenticatie.views import (
     GebruikerAanmakenView,
     GebruikerAanpassenView,
     GebruikerLijstView,
+    LoginView,
+    LogoutView,
     gebruiker_bulk_import,
 )
 from apps.authorisatie.views import (
@@ -40,6 +42,16 @@ router.register(r"signaal", SignaalViewSet, basename="signaal")
 
 urlpatterns = [
     path("", root, name="root"),
+    path(
+        "login/",
+        LoginView.as_view(),
+        name="login",
+    ),
+    path(
+        "logout/",
+        LogoutView.as_view(),
+        name="logout",
+    ),
     path("api/v1/", include((router.urls, "app"), namespace="v1")),
     path("api-token-auth/", views.obtain_auth_token),
     path("part/pageheader-form/", ui_settings_handler, name="pageheader_form_part"),
@@ -120,25 +132,28 @@ urlpatterns = [
     ),
 ]
 
-if settings.OIDC_ENABLED:
+if not settings.ENABLE_DJANGO_ADMIN_LOGIN:
     urlpatterns += [
         path(
             "admin/login/",
-            RedirectView.as_view(
-                url="/oidc/authenticate/?next=/admin/",
-                permanent=False,
-            ),
+            RedirectView.as_view(url="/login/?next=/admin/"),
             name="admin_login",
         ),
         path(
             "admin/logout/",
-            RedirectView.as_view(
-                url="/oidc/logout/?next=/admin/",
-                permanent=False,
-            ),
+            RedirectView.as_view(url="/logout/?next=/"),
             name="admin_logout",
         ),
     ]
+
+if settings.OIDC_ENABLED:
+    urlpatterns += [
+        path("oidc/", include("mozilla_django_oidc.urls")),
+    ]
+
+urlpatterns += [
+    path("admin/", admin.site.urls),
+]
 
 if settings.DEBUG:
     # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
