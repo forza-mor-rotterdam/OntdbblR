@@ -24,7 +24,7 @@ class SignaalSerializer(serializers.Serializer):
     versie = serializers.CharField(
         max_length=500, allow_blank=True, required=False, allow_null=True
     )
-    urgentie = serializers.FloatField()
+    urgentie = serializers.FloatField(required=False, allow_null=True)
     omschrijving_melder = serializers.CharField(
         allow_blank=True, required=False, allow_null=True
     )
