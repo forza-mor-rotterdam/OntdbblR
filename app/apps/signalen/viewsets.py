@@ -35,8 +35,8 @@ class SignaalViewSet(viewsets.ViewSet):
             for auth_part in request.headers.get("Authorization", "").split(" ")
         ][-1]
         mor_core_service = MORCoreService(token=token)
-
-        if serializer.is_valid(raise_exception=True):
+        is_valid = serializer.is_valid(raise_exception=True)
+        if is_valid:
             signaal_data = copy.deepcopy(serializer.data)
             logger.info(f"Request splitter data: {json.dumps(signaal_data, indent=4)}")
 
@@ -104,11 +104,14 @@ class SignaalViewSet(viewsets.ViewSet):
             logger.info(f"Signaal aanmaken data: {json.dumps(signaal_data, indent=4)}")
 
             response = mor_core_service.signaal_aanmaken(data=signaal_data)
+
             status_code = (
-                response.get("errors", {}).get("status_code")
-                if response.get("errors", {})
+                response.get("error", {}).get("status_code")
+                if response.get("error", {})
                 else 201
             )
-            logger.info(f"Response van mor-core: text={response}, status={status_code}")
+            logger.info(
+                f"signaal_aanmaken response van mor-core: text={response}, status={status_code}"
+            )
             return Response(response, status=status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
