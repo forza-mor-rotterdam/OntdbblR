@@ -18,7 +18,13 @@ class SignaalSerializer(serializers.Serializer):
     melder = MelderSerializer(required=False)
     bron_id = serializers.CharField(max_length=500)
     bron_signaal_id = serializers.CharField(max_length=500)
-    urgentie = serializers.FloatField()
+    kanaal = serializers.CharField(
+        max_length=500, allow_blank=True, required=False, allow_null=True
+    )
+    versie = serializers.CharField(
+        max_length=500, allow_blank=True, required=False, allow_null=True
+    )
+    urgentie = serializers.FloatField(default=0.2, required=False, allow_null=True)
     omschrijving_melder = serializers.CharField(
         allow_blank=True, required=False, allow_null=True
     )
@@ -26,6 +32,9 @@ class SignaalSerializer(serializers.Serializer):
         allow_blank=True, required=False, allow_null=True
     )
     aanvullende_vragen = serializers.JSONField(default=list)
+    gebruiker = serializers.CharField(
+        max_length=200, allow_blank=True, required=False, allow_null=True
+    )
     meta = serializers.JSONField(default=dict)
     meta_uitgebreid = serializers.JSONField(default=dict)
     adressen = AdresSerializer(many=True, required=False)
